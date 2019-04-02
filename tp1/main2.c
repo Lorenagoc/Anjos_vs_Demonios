@@ -140,11 +140,11 @@ void posiciona(){
 void comandos(){
    
     if(k['A']==1 || k['a']==1){
-	anzol.velocidadeX= -0.0005;
+	anzol.velocidadeX= -0.5;
     }else 
 
     if(k['D']==1 || k['d']==1){
-		anzol.velocidadeX= 0.0005;
+		anzol.velocidadeX= 0.5;
 	} else anzol.velocidadeX=0;
 
 }
