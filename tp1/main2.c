@@ -26,7 +26,7 @@ int larguraJanela, alturaJanela;
 int k[256]; // Vetor de teclas, 1 para tecla pressionada e 0 para tecla solta
 
 objeto anzol;
-Vetor posicaoAtual = {0, 0, 0};
+objeto coisasBoas[10];
 
 
 void resize(int width, int height){
@@ -57,7 +57,7 @@ void redimensiona(int w, int h){
    glViewport(0, 0, w, h);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glOrtho(-w/2, w/2, -h/2, h/2, -1, 1);
+   glOrtho(-w/2, w/2, -h/2, h/2, -1, 1); //coordenadas dos plano cartesiano da tela
    alturaJanela = h;
    larguraJanela = w;
    glMatrixMode(GL_MODELVIEW);glBegin(GL_TRIANGLE_STRIP);
@@ -70,9 +70,34 @@ void inicializa(void){
 	anzol.x = 0.0; //a origem,é o centro
 	anzol.y = 300.0;
 	anzol.velocidadeX = 0.0;
-	anzol.velocidadeY = -0.0002;
+	anzol.velocidadeY = -0.08;
 	
+	// modificar
+	int x=1;
+        for(int i = 0; i<10 ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
+	        coisasBoas[i].largura=30;
+	        coisasBoas[i].altura = 30;
+	        coisasBoas[i].x = ((rand()%500)*x);
+	        coisasBoas[i].y= (rand()%300);
+	        coisasBoas[i].velocidadeX = 0.0;
+	        coisasBoas[i].velocidadeY = 0.0;
+	 }
+	
+}
 
+void desenhacoisasBoas(void){
+	for(int i =0; i<10 ; i++){
+	glPushMatrix(); //coloco minha matriz
+		glTranslatef(coisasBoas[i].x,coisasBoas[i].y,0);
+		glColor3f(1,0,0);
+		glBegin(GL_TRIANGLE_FAN);
+			glVertex2f(0,0);   //sentido anti horario
+			glVertex2f(0,coisasBoas[i].altura);
+			glVertex2f(coisasBoas[i].largura,coisasBoas[i].altura);
+			glVertex2f(coisasBoas[i].largura,0);
+		glEnd();
+	glPopMatrix(); //tiro minha matriz
+	        }
 }
 
 void desenhaAnzol(void){
@@ -87,6 +112,24 @@ void desenhaAnzol(void){
 		glEnd();
 	glPopMatrix(); //tiro minha matriz
 }
+
+
+int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,double alturaAnzol, double posicaoObjetoX , double posicaoObjetoY, double larguraObjeto, double alturaObjeto  ){
+	if((posicaoObjetoX<=posicaoAnzolX)&&((posicaoObjetoX+larguraObjeto)>=(posicaoAnzolX+larguraAnzol))&&
+	((posicaoObjetoY>=posicaoAnzolY)&&((posicaoObjetoY-alturaObjeto)<=(posicaoAnzolY-alturaAnzol))))
+	return 1;
+}
+
+void detectaColisoes(){
+        for(int i =0 ; i<10 ; i++){
+                if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
+                        printf("Opa");   
+                        coisasBoas[i].largura = 0.0;
+                        coisasBoas[i].altura = 0.0;     
+                }
+        }
+}
+
 
 void posiciona(){
 	 anzol.x+=((anzol.velocidadeX)*(tempoAtual-tempoAnterior));
@@ -107,9 +150,11 @@ void comandos(){
 }
 void atualiza(int x){
 	//lógica do jogo
+	tempoAnterior = glutGet(GLUT_ELAPSED_TIME);
 	tempoAtual = glutGet(GLUT_ELAPSED_TIME); //pega o tempo do teclado	
 	posiciona();
 	comandos();
+	detectaColisoes();
 
 //parte de física
 glutPostRedisplay(); //chama a desenha cena
@@ -120,6 +165,7 @@ void desenhaCena(void){
 	glClearColor(0,0.6, 1,0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	desenhaAnzol();
+	desenhacoisasBoas();
 	glutSwapBuffers();
 
 	
