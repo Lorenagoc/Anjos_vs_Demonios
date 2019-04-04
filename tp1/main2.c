@@ -130,6 +130,7 @@ void detectaColisoes(){
         }
 }
 
+tempoAnterior = glutGet(GLUT_ELAPSED_TIME);
 
 void posiciona(){
 	 anzol.x+=((anzol.velocidadeX)*(tempoAtual-tempoAnterior));
@@ -150,7 +151,7 @@ void comandos(){
 }
 void atualiza(int x){
 	//lógica do jogo
-	tempoAnterior = glutGet(GLUT_ELAPSED_TIME);
+	
 	tempoAtual = glutGet(GLUT_ELAPSED_TIME); //pega o tempo do teclado	
 	posiciona();
 	comandos();
