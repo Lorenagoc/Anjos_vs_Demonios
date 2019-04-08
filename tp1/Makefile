@@ -1,5 +1,5 @@
 TARGET = main
-LIBS = -lglut -lGL -lGLU -lm
+LIBS = -lglut -lGL -lGLU -lSOIL -lm
 
 all: default
     
