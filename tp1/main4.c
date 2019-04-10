@@ -307,9 +307,9 @@ void desenhaCena(void){
 	//desenha as texturas
 	desenhaTextura(FundoPrincipal[0],texturaFundo);
 	desenhaTextura(FundoPrincipal[1],texturaFundo);
-	desenhaAnzol();
+	//desenhaAnzol();
 	desenhaTextura(anzol,texturaAnzol);
-	desenhacoisasBoas();
+	//desenhacoisasBoas();
 	for(int i=0; i<NUMCOISASBOAS; i++){
 		desenhaTextura(coisasBoas[i],texturaCoisasBoas);
 	}
