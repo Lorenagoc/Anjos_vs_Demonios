@@ -307,9 +307,9 @@ void desenhaCena(void){
 	//desenha as texturas
 	desenhaTextura(FundoPrincipal[0],texturaFundo);
 	desenhaTextura(FundoPrincipal[1],texturaFundo);
-	//desenhaAnzol();
+	//desenhaAnzol(); não há necessidade de chamar já q a desenha textura já tem as coordenadas
 	desenhaTextura(anzol,texturaAnzol);
-	//desenhacoisasBoas();
+	//desenhacoisasBoas(); não há necessidade de chamar já q a desenha textura já tem as coordenadas
 	for(int i=0; i<NUMCOISASBOAS; i++){
 		desenhaTextura(coisasBoas[i],texturaCoisasBoas);
 	}
