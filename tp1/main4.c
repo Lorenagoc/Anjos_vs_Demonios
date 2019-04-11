@@ -6,7 +6,7 @@
 #include <SOIL/SOIL.h>
 
 #define NUMCOISASBOAS 5
-#define NUMCOISARUINS 3
+#define NUMCOISASRUINS 3
 
 
 //structs
