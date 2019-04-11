@@ -6,6 +6,8 @@
 #include <SOIL/SOIL.h>
 
 #define NUMCOISASBOAS 5
+#define NUMCOISARUINS 3
+
 
 //structs
 
@@ -30,6 +32,7 @@ int tempoAnterior=0;
 int texturaFundo=0;
 int texturaAnzol=0;
 int texturaCoisasBoas=0;
+int texturaCoisasRuins =0;
 
 int velocidadeCenario=3;
 
@@ -40,6 +43,7 @@ char Pontuacao[] = {"Score:"}; // guarda o score
 int pontuacao = 0; //salva a pontuaçãos
 
 objeto anzol;
+objeto coisasRuins[NUMCOISASRUINS];
 objeto coisasBoas[NUMCOISASBOAS];
 objeto FundoPrincipal[2];
 
@@ -126,7 +130,27 @@ void geradorCoisasBoas(){
 	        coisasBoas[i].velocidadeY = velocidadeCenario;
 	 }
 }
+void geradorCoisasRuins(){
+	int x=1;
+	int geradorX,geradorY;
 
+        for(int i = 0; i<NUMCOISASRUINS ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
+	 
+	        coisasRuins[i].largura=45;
+	        coisasRuins[i].altura = 40;
+	        geradorX = (rand()%600);
+	        geradorY = ((rand()%250)+110)*-1;
+	        
+	        if(geradorX == 0 && geradorY == 300){
+	            coisasRuins[i].y= ((geradorY));
+	        }else
+	        
+	        coisasRuins[i].y= ((geradorY)); 
+	        coisasRuins[i].x = ((geradorX)*x);
+	        coisasRuins[i].velocidadeX = 0.0;
+	        coisasRuins[i].velocidadeY = velocidadeCenario;
+	 }
+}
 void inicializa(void){
 
 	//habilita mesclagem de cores, para termos suporte a texturas semi-transparentes
@@ -136,6 +160,7 @@ void inicializa(void){
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
 	carregarTextura(&texturaAnzol, "Anzol.png");
 	carregarTextura(&texturaCoisasBoas, "coisasBoas.png");
+	carregarTextura(&texturaCoisasRuins, "coisasRuins.png");
 
 	anzol.largura = 8;
 	anzol.altura=10;
@@ -146,6 +171,7 @@ void inicializa(void){
 	
 	// modificar
 	geradorCoisasBoas();
+	geradorCoisasRuins();
 
 	//cenário fundo
 
@@ -161,7 +187,7 @@ void inicializa(void){
 	velocidadeCenario=3;
 }
 
-void desenhacoisasBoas(void){
+void desenhacoisasBoas(void){ //no im não será usada,pobrezinha
 	for(int i =0; i<NUMCOISASBOAS ; i++){
 	glPushMatrix(); //coloco minha matriz
 		glTranslatef(coisasBoas[i].x,coisasBoas[i].y,0);
@@ -204,6 +230,14 @@ void detectaColisoes(){
                         coisasBoas[i].altura = 0.0;     
                 }
         }
+	        for(int i =0 ; i<NUMCOISASRUINS ; i++){
+                if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){
+                        pontuacao-=20;  
+                        coisasRuins[i].largura = 0.0;
+                        coisasRuins[i].altura = 0.0;     
+                }
+        }
+	
 }
 
 
@@ -251,7 +285,7 @@ void desenhaTextura(objeto R, int textura) // desenha a textura, com funcionamen
 
 
 void comandos(){
-   
+   if(anzol.x <640 && anzol.x >(-640)){
     if(k['A']==1 || k['a']==1){
 	anzol.velocidadeX= -0.5;
     }else 
@@ -259,6 +293,7 @@ void comandos(){
     if(k['D']==1 || k['d']==1){
 		anzol.velocidadeX= 0.5;
 	} else anzol.velocidadeX=0;
+   }
 
 }
 
@@ -273,6 +308,7 @@ void andarCenario()
 	}
 	if(FundoPrincipal[0].y + FundoPrincipal[0].altura >= 357)
 		geradorCoisasBoas();
+		geradorCoisasRuins();
 		
 }
 
@@ -281,6 +317,10 @@ void andarObstaculo()//essa função cuida do deslocamento dos obstáculos(que a
 		for(int i=0; i<NUMCOISASBOAS; i++){
 		coisasBoas[i].y+=coisasBoas[i].velocidadeY;
 		}
+	        for(int i=0; i<NUMCOISASRUINS; i++){
+		coisasRuins[i].y+=coisasRuins[i].velocidadeY;
+		}
+		
 }
 
 
@@ -312,6 +352,9 @@ void desenhaCena(void){
 	//desenhacoisasBoas(); não há necessidade de chamar já q a desenha textura já tem as coordenadas
 	for(int i=0; i<NUMCOISASBOAS; i++){
 		desenhaTextura(coisasBoas[i],texturaCoisasBoas);
+	}
+	for(int i=0; i<NUMCOISASRUINS; i++){
+		desenhaTextura(coisasRuins[i],texturaCoisasRuins);
 	}
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Pontuacao,500,300,0);
 	char y[8]; sprintf(y, "%i", pontuacao); //transformar inteiro em string
