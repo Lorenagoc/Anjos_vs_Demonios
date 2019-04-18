@@ -5,12 +5,7 @@
 #include <string.h>
 #include <SOIL/SOIL.h>
 
-
 //structs
-
-typedef struct vetor{
-    double x,y,z;
-} Vetor;
 
 typedef struct Objeto{
 	double x,y;
@@ -73,6 +68,7 @@ objeto gameover;
 objeto nextlevel;
 objeto anjo;
 objeto vidinhas;
+objeto aviso;
 
 int pause = 0;
 
@@ -94,6 +90,32 @@ void carregarTextura(int *textura,char *nome)//carregará as texturas para as va
 }
 
 
+void desenhaTextura(objeto R, int textura) // desenha a textura, com funcionamento similar a desenha quadrado
+{
+	glColor3f(1,1,1);
+	glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textura);
+    glBegin(GL_TRIANGLE_FAN);
+        // Associamos um canto da textura para cada vértice
+        glTexCoord2f(0, 0); glVertex3f(R.x, R.y,  0);
+        glTexCoord2f(1, 0); glVertex3f(R.x+R.largura,	R.y,  0);
+        glTexCoord2f(1, 1); glVertex3f( R.x+R.largura,  R.y+R.altura,  0);
+        glTexCoord2f(0, 1); glVertex3f(	R.x,  R.y+R.altura,  0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void redimensiona(int w, int h){
+   glViewport(0, 0, w, h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(-w/2, w/2, -h/2, h/2, -1, 1); //coordenadas dos plano cartesiano da tela
+   alturaJanela = h;
+   larguraJanela = w;
+   glMatrixMode(GL_MODELVIEW);glBegin(GL_TRIANGLE_STRIP);
+   glLoadIdentity();
+}
+
 void escreveTexto(void * font, char *s, float x, float y, float z) {
     int i;
     glColor3f(1,1,1);
@@ -102,17 +124,6 @@ void escreveTexto(void * font, char *s, float x, float y, float z) {
     for (i = 0; i < strlen(s); i++) {
         glutBitmapCharacter(font, s[i]);
     }
-}
-
-void resize(int width, int height){
-    float razaoaspecto = (float) width / (float) height;
-
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-razaoaspecto, razaoaspecto, -1.0, 1.0, 3.5, 1000.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
 }
 
 void pressiona(unsigned char key,int x,int y){
@@ -136,16 +147,6 @@ void solta(unsigned char key,int x,int y){
 	k[key]=0;
 }
 
-void redimensiona(int w, int h){
-   glViewport(0, 0, w, h);
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   glOrtho(-w/2, w/2, -h/2, h/2, -1, 1); //coordenadas dos plano cartesiano da tela
-   alturaJanela = h;
-   larguraJanela = w;
-   glMatrixMode(GL_MODELVIEW);glBegin(GL_TRIANGLE_STRIP);
-   glLoadIdentity();
-}
 
 void geradorCoisasBoas(int numCoisasBoas){
 	int x=1;
@@ -289,6 +290,13 @@ void inicializa(void){
 	vidinhas.y=360.0;
 	vidinhas.largura=100;
 	vidinhas.altura= -100;
+	
+	//aviso
+	
+	aviso.x=-300.0;
+	aviso.y=75.0;
+	aviso.largura =600.0;
+	aviso.altura=-150.0;
 }
 
 void inicializaGerar(void){	
@@ -303,6 +311,7 @@ void inicializaGerar(void){
 	}
 }
 
+//algoritimo de detectar e responder as colisões
 
 int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,double alturaAnzol, double posicaoObjetoX , double posicaoObjetoY, double larguraObjeto, double alturaObjeto  ){
 	if((posicaoObjetoX<=(posicaoAnzolX+(larguraAnzol)))&&((posicaoObjetoX+(larguraObjeto))>=(posicaoAnzolX+larguraAnzol))&&
@@ -328,7 +337,7 @@ void detectaColisoes(){
 
 }
 
-
+//--------------------------------------------fim algoritimo colisão-------------------------------------------------------
 
 void posiciona(){
 	 anzol.x+=((anzol.velocidadeX)*(tempoAtual-tempoAnterior));
@@ -345,23 +354,6 @@ void posiciona(){
 	 }
 
 }
-
-
-void desenhaTextura(objeto R, int textura) // desenha a textura, com funcionamento similar a desenha quadrado
-{
-	glColor3f(1,1,1);
-	glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textura);
-    glBegin(GL_TRIANGLE_FAN);
-        // Associamos um canto da textura para cada vértice
-        glTexCoord2f(0, 0); glVertex3f(R.x, R.y,  0);
-        glTexCoord2f(1, 0); glVertex3f(R.x+R.largura,	R.y,  0);
-        glTexCoord2f(1, 1); glVertex3f( R.x+R.largura,  R.y+R.altura,  0);
-        glTexCoord2f(0, 1); glVertex3f(	R.x,  R.y+R.altura,  0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
-
 
 void comandos(){
     if(k['A']==1 || k['a']==1){
@@ -569,7 +561,6 @@ int main(int argc, char **argv){
     glutInitWindowPosition(50, 50);
 
     glutCreateWindow("ANJOS X DEMONIOS");
-    glutReshapeFunc(resize); //janela do tamanho que eu quiser
     glutDisplayFunc(desenhaCena);
     glutReshapeFunc(redimensiona);
     glutKeyboardFunc(pressiona);
@@ -580,4 +571,4 @@ int main(int argc, char **argv){
 
     glutMainLoop();
     return 0;
-}//------------------------------------------------- fim da main --------------------------------------
+}
