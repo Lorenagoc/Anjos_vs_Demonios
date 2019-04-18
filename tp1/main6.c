@@ -19,15 +19,17 @@ typedef struct Objeto{
 	double largura,altura;
 } objeto;
 
-//------------------------------------------------------ fim das structs --------------------------------------------
-
 //variaveis globais
 
-int numCoisasBoas=12;
-int numCoisasRuins=12;
+int numCoisasBoas = 12; //máximo,porem altera-se com as fases
+int numCoisasRuins =12; //máximo,porem altera-se com as fases
 
 int tempoAtual;
 int tempoAnterior=0;
+long int momentoQueDeuGameOver = 0;
+long int momentoQuePassouPra2 = 0;
+long int momentoQuePassouPra3 = 0;
+
 
 int aux2=0;
 int aux3=0;
@@ -61,9 +63,6 @@ int k[256]; // Vetor de teclas, 1 para tecla pressionada e 0 para tecla solta
 char Pontuacao[] = {"Score:"}; // guarda o score
 int pontuacao1 = 0; //salva a pontuaçãos
 
-long int momentoQueDeuGameOver = 0;
-long int momentoQuePassouPra2 = 0;
-long int momentoQuePassouPra3 = 0;
 
 objeto anzol;
 objeto coisasRuins[12];
@@ -148,7 +147,7 @@ void redimensiona(int w, int h){
    glLoadIdentity();
 }
 
-void geradorCoisasBoas(){
+void geradorCoisasBoas(int numCoisasBoas){
 	int x=1;
 	int geradorX,geradorY;
 
@@ -169,11 +168,11 @@ void geradorCoisasBoas(){
 	        coisasBoas[i].velocidadeY = velocidadeCenario;
 	 }
 }
-void geradorCoisasRuins(){
+void geradorCoisasRuins(int numCoisasRuins){
 	int x=1;
 	int geradorX,geradorY;
 
-        for(int i = 0; i<6 ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
+        for(int i = 0; i<numCoisasRuins ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
 
 	        coisasRuins[i].largura=45;
 	        coisasRuins[i].altura = 40;
@@ -192,106 +191,19 @@ void geradorCoisasRuins(){
 }
 
 void gerarFase1(){
-	geradorCoisasBoas();
-	geradorCoisasRuins();
-}
-
-void geradorCoisasBoas2(){
-	int x=1;
-	int geradorX,geradorY;
-
-        for(int i = 0; i<numCoisasBoas ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
-
-	        coisasBoas[i].largura=45;
-	        coisasBoas[i].altura = 40;
-	        geradorX = (rand()%640);
-	        geradorY = ((rand()%250)+110)*-1;
-
-	        if(geradorX == 0 && geradorY == 300){
-	            coisasBoas[i].y= ((geradorY));
-	        }else
-
-	        coisasBoas[i].y= ((geradorY));
-	        coisasBoas[i].x = ((geradorX)*x);
-	        coisasBoas[i].velocidadeX = 0.0;
-	        coisasBoas[i].velocidadeY = velocidadeCenario;
-	 }
-}
-void geradorCoisasRuins2(){
-	int x=1;
-	int geradorX,geradorY;
-
-        for(int i = 0; i<numCoisasRuins ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
-
-	        coisasRuins[i].largura=45;
-	        coisasRuins[i].altura = 40;
-	        geradorX = (rand()%640);
-	        geradorY = ((rand()%250)+110)*-1;
-
-	        if(geradorX == 0 && geradorY == 300){
-	            coisasRuins[i].y= ((geradorY));
-	        }else
-
-	        coisasRuins[i].y= ((geradorY));
-	        coisasRuins[i].x = ((geradorX)*x);
-	        coisasRuins[i].velocidadeX = 0.0;
-	        coisasRuins[i].velocidadeY = velocidadeCenario;
-	 }
-}
-
-void geradorCoisasBoas3(){
-	int x=1;
-	int geradorX,geradorY;
-
-        for(int i = 0; i<6 ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
-
-	        coisasBoas[i].largura=45;
-	        coisasBoas[i].altura = 40;
-	        geradorX = (rand()%640);
-	        geradorY = ((rand()%250)+110)*-1;
-
-	        if(geradorX == 0 && geradorY == 300){
-	            coisasBoas[i].y= ((geradorY));
-	        }else
-
-	        coisasBoas[i].y= ((geradorY));
-	        coisasBoas[i].x = ((geradorX)*x);
-	        coisasBoas[i].velocidadeX = 0.0;
-	        coisasBoas[i].velocidadeY = velocidadeCenario;
-	 }
-}
-void geradorCoisasRuins3(){
-	int x=1;
-	int geradorX,geradorY;
-
-        for(int i = 0; i<numCoisasRuins ; i++ , x*=-1){ //O x irá variar de positivo para negativo, pois a origem está no meio da tela
-
-	        coisasRuins[i].largura=45;
-	        coisasRuins[i].altura = 40;
-	        geradorX = (rand()%640);
-	        geradorY = ((rand()%250)+110)*-1;
-
-	        if(geradorX == 0 && geradorY == 300){
-	            coisasRuins[i].y= ((geradorY));
-	        }else
-
-	        coisasRuins[i].y= ((geradorY));
-	        coisasRuins[i].x = ((geradorX)*x);
-	        coisasRuins[i].velocidadeX = 0.0;
-	        coisasRuins[i].velocidadeY = velocidadeCenario;
-	 }
+	geradorCoisasBoas(12);
+	geradorCoisasRuins(6);
 }
 
 void gerarFase2(){
-	geradorCoisasBoas2();
-	geradorCoisasRuins2();
+	geradorCoisasBoas(12);
+	geradorCoisasRuins(12);
 }
 
 void gerarFase3(){
-	geradorCoisasBoas3();
-	geradorCoisasRuins3();
+	geradorCoisasBoas(6);
+	geradorCoisasRuins(12);
 }
-
 
 void inicializa(void){
 	//habilita mesclagem de cores, para termos suporte a texturas semi-transparentes
@@ -434,25 +346,6 @@ void posiciona(){
 
 }
 
-// essa parte faz manipulação de strings para carregar muitas imagens
-
-void substituir(char *nome,int indice) // serve para ajudar a iniciar as texturas do personagem
-{
-	int i;
-	for(i=0;i<strlen(nome);i++)
-		if(nome[i]=='!')
-			nome[i]=indice+48;
-}
-
-void copiarString(char *nome1,char *nome2)// serve para ajudar a iniciar as texturas do personagem
-{
-	int i;
-	for(i=0;i<strlen(nome1);i++)
-		nome2[i]=nome1[i];
-	nome2[i]='\0';
-
-}
-
 
 void desenhaTextura(objeto R, int textura) // desenha a textura, com funcionamento similar a desenha quadrado
 {
@@ -529,8 +422,6 @@ void atualiza(int x){
 	    tempoAnterior = glutGet(GLUT_ELAPSED_TIME);
 	  }
 
-
-    //parte de física
     glutPostRedisplay(); //chama a desenha cena
     glutTimerFunc(17,atualiza,0); //tempo de frame
 }
