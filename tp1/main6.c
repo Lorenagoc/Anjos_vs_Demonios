@@ -126,22 +126,6 @@ void escreveTexto(void * font, char *s, float x, float y, float z) {
     }
 }
 
-void pressiona(unsigned char key,int x,int y){
-	k[key]=1;
-	    switch(key){
-        case 27:
-            exit(0);
-            break;
-        case 'p':
-        case 'P':
-            if(pause == 0) {
-              pause = 1;
-            } else {
-              pause = 0;
-            }
-
-    }
-}
 
 void solta(unsigned char key,int x,int y){
 	k[key]=0;
@@ -156,7 +140,7 @@ void geradorCoisasBoas(int numCoisasBoas){
 
 	        coisasBoas[i].largura=45;
 	        coisasBoas[i].altura = 40;
-	        geradorX = (rand()%640);
+	        geradorX = (rand()%(larguraJanela/2));
 	        geradorY = ((rand()%250)+110)*-1;
 
 	        if(geradorX == 0 && geradorY == 300){
@@ -177,7 +161,7 @@ void geradorCoisasRuins(int numCoisasRuins){
 
 	        coisasRuins[i].largura=45;
 	        coisasRuins[i].altura = 40;
-	        geradorX = (rand()%640);
+	        geradorX = (rand()%(larguraJanela/2));
 	        geradorY = ((rand()%250)+110)*-1;
 
 	        if(geradorX == 0 && geradorY == 300){
@@ -244,7 +228,7 @@ void inicializa(void){
 	//cenário fundo
 
 	FundoPrincipal[0].x = -larguraJanela/2;
-	FundoPrincipal[0].y = alturaJanela; // as coordenadas zero estão no meio da tela
+	FundoPrincipal[0].y = alturaJanela/2; // as coordenadas zero estão no meio da tela
 	FundoPrincipal[0].largura = larguraJanela;
 	FundoPrincipal[0].altura = -alturaJanela;
 	FundoPrincipal[1].x = -larguraJanela/2;     // CENÁRIO
@@ -286,8 +270,8 @@ void inicializa(void){
 
 	//coraçoes
 
-	vidinhas.x=-larguraJanela/2;
-	vidinhas.y=alturaJanela/2;
+	vidinhas.x=-640.0;
+	vidinhas.y=360.0;
 	vidinhas.largura=100;
 	vidinhas.altura= -100;
 	
@@ -309,6 +293,34 @@ void inicializaGerar(void){
 	else if(pontuacao1>250){
 		gerarFase3();		
 	}
+}
+
+void desenhaAviso(){
+		glColor3f(0,0,0);
+		glBegin(GL_TRIANGLE_FAN);
+			glVertex2f(0,0);   //sentido anti horario
+			glVertex2f(0,aviso.altura);
+			glVertex2f(aviso.largura,aviso.altura);
+			glVertex2f(aviso.largura,0);
+		glEnd();
+}
+
+void pressiona(unsigned char key,int x,int y){
+	k[key]=1;
+	    switch(key){
+        case 27:
+        	desenhaAviso();
+            exit(0);
+            break;
+        case 'p':
+        case 'P':
+            if(pause == 0) {
+              pause = 1;
+            } else {
+              pause = 0;
+            }
+
+    }
 }
 
 //algoritimo de detectar e responder as colisões
@@ -486,8 +498,6 @@ void ControleCoracoes(void){
 		desenhaTextura(gameover,texturaGameOver);
 		}
 }
-
-
 
 void desenhaCena(void){
 	long int momentoAtual =glutGet(GLUT_ELAPSED_TIME);
