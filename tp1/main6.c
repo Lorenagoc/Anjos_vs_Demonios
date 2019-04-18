@@ -493,7 +493,7 @@ void ControleCoracoes(void){
 	desenhaTextura(vidinhas,texturaVidinhas2);
 	if(Vidinhas==1)
 	desenhaTextura(vidinhas,texturaVidinhas1);
-	if(Vidinhas==0){
+	if(Vidinhas<=0){
 		desenhaTextura(vidinhas,texturaVidinhas0);
 		desenhaTextura(gameover,texturaGameOver);
 		}
