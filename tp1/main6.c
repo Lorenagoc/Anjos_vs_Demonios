@@ -243,14 +243,14 @@ void inicializa(void){
 
 	//cenário fundo
 
-	FundoPrincipal[0].x = -640.0;
-	FundoPrincipal[0].y = 360; // as coordenadas zero estão no meio da tela
-	FundoPrincipal[0].largura = 1280.0;
-	FundoPrincipal[0].altura = -720.0;
-	FundoPrincipal[1].x = -640.0;     // CENÁRIO
-	FundoPrincipal[1].y = -360;
-	FundoPrincipal[1].largura = 1280.0;
-	FundoPrincipal[1].altura = -720.0;
+	FundoPrincipal[0].x = -larguraJanela/2;
+	FundoPrincipal[0].y = alturaJanela; // as coordenadas zero estão no meio da tela
+	FundoPrincipal[0].largura = larguraJanela;
+	FundoPrincipal[0].altura = -alturaJanela;
+	FundoPrincipal[1].x = -larguraJanela/2;     // CENÁRIO
+	FundoPrincipal[1].y = -alturaJanela/2;
+	FundoPrincipal[1].largura = larguraJanela;
+	FundoPrincipal[1].altura = -alturaJanela;
 
 	velocidadeCenario=3;
 
@@ -286,8 +286,8 @@ void inicializa(void){
 
 	//coraçoes
 
-	vidinhas.x=-600.0;
-	vidinhas.y=360.0;
+	vidinhas.x=-larguraJanela/2;
+	vidinhas.y=alturaJanela/2;
 	vidinhas.largura=100;
 	vidinhas.altura= -100;
 	
@@ -344,11 +344,11 @@ void posiciona(){
 	 anjo.velocidadeX = anzol.velocidadeX;
 	 anjo.x+=((anjo.velocidadeX)*(tempoAtual-tempoAnterior));
 
-	 if(anzol.x + anzol.largura/2 > 640){
+	 if(anzol.x + anzol.largura/2 > larguraJanela/2){
 		anzol.x = anzol.x - 1080;
 		anjo.x = anjo.x - 1080;
 	 }
-	else if(anzol.x + anzol.largura/2 < -640){
+	else if(anzol.x + anzol.largura/2 < -larguraJanela/2){
 		anzol.x = anzol.x + 1080;
 		anjo.x = anjo.x + 1080;
 	 }
