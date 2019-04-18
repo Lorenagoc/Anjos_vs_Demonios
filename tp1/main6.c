@@ -71,6 +71,8 @@ objeto vidinhas;
 objeto aviso;
 
 int pause = 0;
+int esc = 0;
+int reiniciar =0;
 
 //------------------------------------------------- fim das variáveis globais --------------------------------------
 
@@ -309,7 +311,6 @@ void pressiona(unsigned char key,int x,int y){
 	k[key]=1;
 	    switch(key){
         case 27:
-        	desenhaAviso();
             exit(0);
             break;
         case 'p':
@@ -416,7 +417,7 @@ void andarObstaculo()//essa função cuida do deslocamento dos obstáculos(que a
 
 void atualiza(int x){
 
-	  if (pause == 0) {
+	  if (pause == 0 && esc==0 && reiniciar==0) {
 	    tempoAtual = glutGet(GLUT_ELAPSED_TIME); //pega o tempo do teclado
 	    posiciona();
 	    comandos();
