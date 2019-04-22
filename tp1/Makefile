@@ -1,5 +1,5 @@
 TARGET = main
-LIBS = -lglut -lGL -lGLU -lSOIL -lm
+LIBS = -lglut -lGL -lGLU -lSOIL -lm -lSDL -lSDL_mixer
 
 all: default
     
