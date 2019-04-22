@@ -4,6 +4,8 @@
 #include <time.h>
 #include <string.h>
 #include <SOIL/SOIL.h>
+#include <SDL/SDL_mixer.h>
+#include <SDL/SDL.h>
 
 //structs
 
@@ -109,6 +111,33 @@ void desenhaTextura(objeto R, int textura) // desenha a textura, com funcionamen
     glDisable(GL_TEXTURE_2D);
 }
 
+//música
+
+void tocar_musica(char const nome[40], int loop){
+        Mix_Chunk *som = NULL;
+        int canal;
+        int canal_audio=2;
+        int taxa_audio = 22050;
+        Uint16 formato_audio = AUDIO_S16SYS;
+        int audio_buffers = 1024;
+        if(Mix_OpenAudio(taxa_audio, formato_audio, canal_audio, audio_buffers) != 0) {
+                printf("Não pode inicializar audio: %s\n", Mix_GetError());
+        }
+       som = Mix_LoadWAV(nome);
+        if(som == NULL) {
+                printf("Não pode inicializar audio: %s\n", Mix_GetError());
+        }
+       Mix_HaltChannel(-1);
+       canal = Mix_PlayChannel( -1, som, loop);
+        if(canal == -1) {
+                printf("Não pode inicializar audio: %s\n", Mix_GetError());
+        }
+}
+
+void parar_musica(){
+    Mix_HaltChannel(-1);
+}
+
 void redimensiona(int w, int h){
    glViewport(0, 0, w, h);
    glMatrixMode(GL_PROJECTION);
@@ -193,6 +222,9 @@ void gerarFase3(){
 	geradorCoisasBoas(6);
 	geradorCoisasRuins(12);
 }
+
+
+
 
 void inicializa(void){
 	//habilita mesclagem de cores, para termos suporte a texturas semi-transparentes
@@ -368,6 +400,7 @@ int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,doub
 void detectaColisoes(){
         for(int i =0 ; i<numCoisasBoas ; i++){
                 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
+                        tocar_musica("Ambient-Space-Music-Shooting-Stars.ogg", 1);
                         pontuacao1+=10;
                         coisasBoas[i].largura = 0.0;
                         coisasBoas[i].altura = 0.0;
@@ -375,6 +408,7 @@ void detectaColisoes(){
         }
 	        for(int i =0 ; i<numCoisasRuins ; i++){
                 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){
+                        tocar_musica("Ambient-Space-Music-Shooting-Stars.ogg", 1);
                         Vidinhas--;
                         coisasRuins[i].largura = 0.0;
                         coisasRuins[i].altura = 0.0;
@@ -534,6 +568,7 @@ void ControleCoracoes(void){
 }
 
 void desenhaCena(void){
+	
 	long int momentoAtual =glutGet(GLUT_ELAPSED_TIME);
 	glClear(GL_COLOR_BUFFER_BIT);
 	if(pontuacao1<=100){
