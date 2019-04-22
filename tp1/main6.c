@@ -26,12 +26,14 @@ int tempoAnterior=0;
 long int momentoQueDeuGameOver = 0;
 long int momentoQuePassouPra2 = 0;
 long int momentoQuePassouPra3 = 0;
+long int momentoQuePassouPra4 = 0;
 
 
 int aux2=0;
 int aux3=0;
+int aux4=0;
 
-
+int texturaFundoMenu=0;
 int texturaFundo=0;
 int texturaAnzol=0;
 int texturaCoisasBoas=0;
@@ -62,6 +64,8 @@ int pontuacao1 = 0; //salva a pontuaçãos
 
 char AvisoEsc[] = {"Se deseja sair mesmo do jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
 char AvisoReiniciar[] = {"Se deseja reiniciar mesmo o jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
+char Instrucoes[] = {"Para movimentação do anjinho: A- Esquerda D- Direita"};
+char Creditos[] = {"Doces garotas dedicadas: Lorena Gomes&Ana Carolina - 2019.1"};
 
 objeto anzol;
 objeto coisasRuins[12];
@@ -73,10 +77,14 @@ objeto nextlevel;
 objeto anjo;
 objeto vidinhas;
 objeto aviso;
+objeto chefao;
 
 int pause = 0;
 int esc = 0;
 int reiniciar =0;
+int menu =1;
+int instrucao=0;
+int creditos=0;
 
 //------------------------------------------------- fim das variáveis globais --------------------------------------
 
@@ -208,6 +216,15 @@ void geradorCoisasRuins(int numCoisasRuins){
 	 }
 }
 
+void geradorChefao(){
+	chefao.x=0;
+	chefao.y=-360.0;
+	chefao.largura=60;
+	chefao.altura=90;
+	chefao.velocidadeX=0.8;
+	chefao.velocidadeY=4;
+}
+
 void gerarFase1(){
 	geradorCoisasBoas(12);
 	geradorCoisasRuins(6);
@@ -223,6 +240,11 @@ void gerarFase3(){
 	geradorCoisasRuins(12);
 }
 
+void gerarFase4(){
+	geradorCoisasBoas(6);
+	geradorCoisasRuins(6);
+	//geradorChefao();
+}
 
 
 
@@ -232,6 +254,7 @@ void inicializa(void){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//carregando texturas
+	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
 	carregarTextura(&texturaAnzol, "Anzol.png");
 	carregarTextura(&texturaCoisasBoas, "coisasBoas.png");
@@ -317,6 +340,7 @@ void inicializa(void){
 	aviso.y=75.0;
 	aviso.largura =600.0;
 	aviso.altura=-150.0;
+
 }
 
 void inicializaGerar(void){	
@@ -326,8 +350,11 @@ void inicializaGerar(void){
 	else if(pontuacao1>100 && pontuacao1<=250){
 		gerarFase2();
 	}
-	else if(pontuacao1>250){
+	else if(pontuacao1>250 && pontuacao1<=350){
 		gerarFase3();		
+	}
+	else if(pontuacao1>350){
+		gerarFase4();		
 	}
 }
 
@@ -344,7 +371,29 @@ void desenhaAviso(){
 void pressiona(unsigned char key,int x,int y){
 	k[key]=1;
 	    switch(key){
-        case 27:
+	if(menu==1){
+	case 'j':
+	case 'J':
+		menu=0;
+		break;
+	case 'i':
+	case 'I':
+            if(instrucao == 0) {
+              instrucao = 1;
+            } else {
+              instrucao = 0;
+            }
+	    break;
+	case 'c':
+	case 'C':
+	   if(creditos == 0) {
+              creditos = 1;
+            } else {
+              creditos = 0;
+            }
+	    break;
+	}        
+	case 27:
         	esc= 1;
         	break;
         
@@ -400,7 +449,7 @@ int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,doub
 void detectaColisoes(){
         for(int i =0 ; i<numCoisasBoas ; i++){
                 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
-                        tocar_musica("Ambient-Space-Music-Shooting-Stars.ogg", 1);
+                        tocar_musica("MusicaBateCoisasBoas.ogg", 1);
                         pontuacao1+=10;
                         coisasBoas[i].largura = 0.0;
                         coisasBoas[i].altura = 0.0;
@@ -408,13 +457,18 @@ void detectaColisoes(){
         }
 	        for(int i =0 ; i<numCoisasRuins ; i++){
                 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){
-                        tocar_musica("Ambient-Space-Music-Shooting-Stars.ogg", 1);
+                        tocar_musica("MusicaBateCoisasRuins.ogg", 1);
                         Vidinhas--;
                         coisasRuins[i].largura = 0.0;
                         coisasRuins[i].altura = 0.0;
                 }
         }
-
+		 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,chefao.x,chefao.y,chefao.largura,chefao.altura))){
+                        tocar_musica("MusicaBateCoisasRuins.ogg", 1);
+                        Vidinhas--;
+			chefao.largura=0.0;
+			chefao.altura=0.0;
+                }
 }
 
 //--------------------------------------------fim algoritimo colisão-------------------------------------------------------
@@ -423,6 +477,7 @@ void posiciona(){
 	 anzol.x+=((anzol.velocidadeX)*(tempoAtual-tempoAnterior));
 	 anjo.velocidadeX = anzol.velocidadeX;
 	 anjo.x+=((anjo.velocidadeX)*(tempoAtual-tempoAnterior));
+	 chefao.x+=((chefao.velocidadeX)*(tempoAtual-tempoAnterior));
 
 	 if(anzol.x + anzol.largura/2 > larguraJanela/2){
 		anzol.x = anzol.x - 1080;
@@ -432,7 +487,18 @@ void posiciona(){
 		anzol.x = anzol.x + 1080;
 		anjo.x = anjo.x + 1080;
 	 }
-
+	 if(chefao.x + chefao.largura/2 > larguraJanela/2){
+		chefao.x = chefao.x - 1080;
+	 }
+	else if(chefao.x + chefao.largura/2 < -larguraJanela/2){
+		chefao.x = chefao.x + 1080;
+	}
+	if(chefao.y + chefao.altura/2 > alturaJanela/2){
+		chefao.y = chefao.y - 720;
+	 }
+	else if(chefao.y + chefao.altura/2 < -alturaJanela/2){
+		chefao.y = chefao.y + 720;
+	}
 }
 
 void comandos(){
@@ -460,23 +526,27 @@ void andarCenario()
 		if(pontuacao1<=100){
 			gerarFase1();
 		}
-		if(pontuacao1>100){
+		else if(pontuacao1>100 && pontuacao1<=250){
 			gerarFase2();
 		}
-		if(pontuacao1>250){
+		else if(pontuacao1>250 && pontuacao1<=350){
 			gerarFase3();		
+		}
+		else if(pontuacao1>350){	
+			gerarFase4();		
 		}
 	}
 }
 
-void andarObstaculo()//essa função cuida do deslocamento dos obstáculos(que até agora é apenas um)
-{					 //quando todo o obstáculo passar pela tela, ele volta para o início da tela com tamanho diferente
+void andarObstaculo()
+{		//quando todo o obstáculo passar pela tela, ele volta para o início da tela com tamanho diferente
 		for(int i=0; i<numCoisasBoas; i++){
 		coisasBoas[i].y+=coisasBoas[i].velocidadeY;
 		}
 	        for(int i=0; i<numCoisasRuins; i++){
 		coisasRuins[i].y+=coisasRuins[i].velocidadeY;
 		}
+		chefao.y+=chefao.velocidadeY;
 
 }
 
@@ -484,7 +554,7 @@ void andarObstaculo()//essa função cuida do deslocamento dos obstáculos(que a
 
 void atualiza(int x){
 
-	  if (pause == 0 && esc==0 && reiniciar==0) {
+	  if (pause == 0 && esc==0 && reiniciar==0 && menu==0) {
 	    tempoAtual = glutGet(GLUT_ELAPSED_TIME); //pega o tempo do teclado
 	    posiciona();
 	    comandos();
@@ -547,6 +617,25 @@ void Fase3(void){
 	desenhaTextura(anjo,texturaAnjo);		
 }
 
+void Fase4(void){
+	if(aux4==0){
+		gerarFase4();
+		aux4=1;	
+	}
+	velocidadeCenario=4;
+	desenhaTextura(FundoPrincipal[0],texturaFundo3);
+	desenhaTextura(FundoPrincipal[1],texturaFundo3);
+	desenhaTextura(anzol,texturaAnzol);
+	for(int i=0; i<6; i++){
+		desenhaTextura(coisasBoas[i],texturaCoisasBoas);
+	}
+	for(int i=0; i<6; i++){
+		desenhaTextura(coisasRuins[i],texturaCoisasRuins);
+	}
+	//desenhaTextura(chefao,texturaCoisasRuins);
+	desenhaTextura(anjo,texturaAnjo);		
+}
+
 
 void ControleCoracoes(void){
 	if(Vidinhas==6)
@@ -562,15 +651,29 @@ void ControleCoracoes(void){
 	if(Vidinhas==1)
 	desenhaTextura(vidinhas,texturaVidinhas1);
 	if(Vidinhas<=0){
+		tocar_musica("somderrota.ogg", 1);
 		desenhaTextura(vidinhas,texturaVidinhas0);
 		desenhaTextura(gameover,texturaGameOver);
 		}
 }
 
-void desenhaCena(void){
-	
+void desenhaCena(void){	
 	long int momentoAtual =glutGet(GLUT_ELAPSED_TIME);
 	glClear(GL_COLOR_BUFFER_BIT);
+	if(menu==1){
+		desenhaTextura(FundoPrincipal[0],texturaFundoMenu);
+		if(instrucao==1){
+		desenhaAviso();
+		escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Instrucoes,-440,-60,0);	
+		}
+		else if(creditos==1){
+		desenhaAviso();
+		escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Creditos,-440,-60,0);	
+		}
+		glutSwapBuffers();
+	
+	}
+	else{
 	if(pontuacao1<=100){
 		Fase1();
 	}
@@ -609,6 +712,23 @@ void desenhaCena(void){
 			Fase3();
 		}
 	}
+		if(pontuacao1>350){
+			if(momentoQuePassouPra4 == 0)
+			momentoQuePassouPra4 =glutGet(GLUT_ELAPSED_TIME);
+		if(momentoAtual - momentoQuePassouPra4 < 2000){
+			if(momentoAtual - momentoQuePassouPra4 < 1000){
+			Fase3();			
+			desenhaTextura(nextlevel,texturaNextLevel);
+			}
+			if(momentoAtual - momentoQuePassouPra4 > 1000 && momentoAtual - momentoQuePassouPra4 < 2000){
+			Fase4();			
+			desenhaTextura(nextlevel,texturaNextLevel);
+			}
+		}				
+		else if(momentoAtual - momentoQuePassouPra4 > 2000){
+			Fase4();
+		}
+	}
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Pontuacao,500,300,0);
 	char y[8]; sprintf(y, "%i", pontuacao1); //transformar inteiro em string
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,y,570,300,0);
@@ -624,6 +744,7 @@ void desenhaCena(void){
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,AvisoReiniciar,-440,-60,0);
 	}
 	if(Vidinhas<=0){
+		tocar_musica("somderrota.ogg", 1);
 		if(momentoQueDeuGameOver == 0)
 			momentoQueDeuGameOver =glutGet(GLUT_ELAPSED_TIME);
 		if(momentoAtual - momentoQueDeuGameOver > 1200){
@@ -631,7 +752,7 @@ void desenhaCena(void){
 		}	
 	}
 	ControleCoracoes();
-	glutSwapBuffers();
+	glutSwapBuffers();}
 
 }
 
