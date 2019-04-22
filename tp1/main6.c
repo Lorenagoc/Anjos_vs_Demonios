@@ -315,31 +315,37 @@ void pressiona(unsigned char key,int x,int y){
         case 27:
         	esc= 1;
         	break;
+        
+        case 'r':
+        case 'R':
+            reiniciar =1;
+        	break;
+        	
         case 's':
         case 'S':
-            exit(0);
-            break;
+            if(esc==1){
+                exit(0);
+                break;
+            }
+            if(reiniciar==1){
+                inicializa();
+       		    inicializaGerar();
+       		    pontuacao1=0;
+       		    reiniciar = 0;
+       		    Vidinhas =6;
+       		    break;
+            }
         case 'n':
         case 'N':
-            esc=0;
-            break;
-            
-        //case 'r':
-      //  case 'R':
-        //	reiniciar =1;
-        	//break;
-        //case 'n':
-        //case 'N':
-        	//reiniciar =0;
-        	//break;
-        //case 's':
-        //case 'S':
-       		//inicializa();
-       		//inicializaGerar();
-       		//pontuacao1=0;
-       		//reiniciar = 0;
-       		//break;
-            
+            if(esc==1){
+                esc=0;
+                break;
+            }
+            if(reiniciar==1){
+                reiniciar =0;
+        	    break;
+            }
+        	           
         case 'p':
         case 'P':
             if(pause == 0) {
