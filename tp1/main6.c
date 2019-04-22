@@ -1,4 +1,4 @@
-#include <GL/freeglut.h>
+##include <GL/freeglut.h>
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
@@ -58,6 +58,8 @@ int k[256]; // Vetor de teclas, 1 para tecla pressionada e 0 para tecla solta
 char Pontuacao[] = {"Score:"}; // guarda o score
 int pontuacao1 = 0; //salva a pontuaçãos
 
+char AvisoEsc[] = {"Se deseja sair mesmo do jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
+char AvisoReiniciar[] = {"Se deseja reiniciar mesmo o jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
 
 objeto anzol;
 objeto coisasRuins[12];
@@ -300,8 +302,8 @@ void inicializaGerar(void){
 void desenhaAviso(){
 		glColor3f(0,0,0);
 		glBegin(GL_TRIANGLE_FAN);
-			glVertex2f(0,0);   //sentido anti horario
-			glVertex2f(0,aviso.altura);
+			glVertex2f(-aviso.largura,0);   //sentido anti horario
+			glVertex2f(-aviso.largura,aviso.altura);
 			glVertex2f(aviso.largura,aviso.altura);
 			glVertex2f(aviso.largura,0);
 		glEnd();
@@ -311,8 +313,33 @@ void pressiona(unsigned char key,int x,int y){
 	k[key]=1;
 	    switch(key){
         case 27:
+        	esc= 1;
+        	break;
+        case 's':
+        case 'S':
             exit(0);
             break;
+        case 'n':
+        case 'N':
+            esc=0;
+            break;
+            
+        //case 'r':
+      //  case 'R':
+        //	reiniciar =1;
+        	//break;
+        //case 'n':
+        //case 'N':
+        	//reiniciar =0;
+        	//break;
+        //case 's':
+        //case 'S':
+       		//inicializa();
+       		//inicializaGerar();
+       		//pontuacao1=0;
+       		//reiniciar = 0;
+       		//break;
+            
         case 'p':
         case 'P':
             if(pause == 0) {
@@ -546,6 +573,14 @@ void desenhaCena(void){
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,y,570,300,0);
 	  if(pause ==1){
 	desenhaTextura(paused,texturaPaused);
+	}
+		  if(esc ==1){
+	desenhaAviso();
+	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,AvisoEsc,-440,-60,0);
+	}
+			  if(reiniciar ==1){
+	desenhaAviso();
+	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,AvisoReiniciar,-440,-60,0);
 	}
 	if(Vidinhas<=0){
 		if(momentoQueDeuGameOver == 0)
