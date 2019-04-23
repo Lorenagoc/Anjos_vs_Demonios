@@ -36,6 +36,7 @@ int aux4=0;
 int texturaFundoMenu=0;
 int texturaFundo=0;
 int texturaAnzol=0;
+int texturaChefao=0;
 int texturaCoisasBoas=0;
 int texturaCoisasRuins =0;
 int texturaPaused =0;
@@ -219,10 +220,10 @@ void geradorCoisasRuins(int numCoisasRuins){
 void geradorChefao(){
 	chefao.x=0;
 	chefao.y=-360.0;
-	chefao.largura=60;
-	chefao.altura=90;
+	chefao.largura=120;
+	chefao.altura=120;
 	chefao.velocidadeX=0.8;
-	chefao.velocidadeY=4;
+	chefao.velocidadeY=3;
 }
 
 void gerarFase1(){
@@ -254,6 +255,7 @@ void inicializa(void){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//carregando texturas
+	carregarTextura(&texturaChefao,"Chefao.png");
 	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
 	carregarTextura(&texturaAnzol, "Anzol.png");
@@ -650,7 +652,7 @@ void Fase4(void){
 	for(int i=0; i<6; i++){
 		desenhaTextura(coisasRuins[i],texturaCoisasRuins);
 	}
-	desenhaTextura(chefao,texturaCoisasRuins);
+	desenhaTextura(chefao,texturaChefao);
 	desenhaTextura(anjo,texturaAnjo);		
 }
 
