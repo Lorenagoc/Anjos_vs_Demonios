@@ -97,6 +97,7 @@ int menu =1;
 int instrucao=0;
 int creditos=0;
 int nivel=0;
+int venceu=0;
 
 //------------------------------------------------- fim das variáveis globais --------------------------------------
 
@@ -506,7 +507,7 @@ int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,doub
 
 void detectaColisoes(){
         for(int i =0 ; i<numCoisasBoas ; i++){
-            if(pontuacao<500){
+            if(pontuacao1<500){
                     if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
                             tocar_musica("MusicaBateCoisasBoas.ogg", 0);
                             pontuacao1+=10;
@@ -514,7 +515,7 @@ void detectaColisoes(){
                             coisasBoas[i].altura = 0.0;
                     }
             }
-            if(pontuacao==500){
+            if(pontuacao1==500){
                 tocar_musica("MusicaVitoria.ogg", 0);
             }
         }
@@ -634,7 +635,7 @@ void andarObstaculo()
 
 void atualiza(int x){
 
-	  if (pause == 0 && esc==0 && reiniciar==0 && menu==0) {
+	  if (pause == 0 && esc==0 && reiniciar==0 && menu==0 && venceu==0) {
 	    tempoAtual = glutGet(GLUT_ELAPSED_TIME); //pega o tempo do teclado
 	    posiciona();
 	    comandos();
@@ -808,13 +809,12 @@ void desenhaCena(void){
 	    if(pontuacao1>500){
 			if(momentoQuePassouPra5 == 0)
 			    momentoQuePassouPra5 =glutGet(GLUT_ELAPSED_TIME);
-		    if(momentoAtual - momentoQuePassouPra5 < 1200){
-			    if(momentoAtual - momentoQuePassouPra5 < 1200){
+		    if(momentoAtual - momentoQuePassouPra5 < 5000){
 			    Fase4();			
-			    desenhaTextura(youWin,texturaYouWin);		
-			    }
+			    desenhaTextura(youWin,texturaYouWin);
+			    venceu=1;		
 		    }				
-		    else if(momentoAtual - momentoQuePassouPra5 > 2000){
+		    else if(momentoAtual - momentoQuePassouPra5 > 5000){
 			    exit(0);
 		    }
 	    }
