@@ -213,7 +213,7 @@ void MouseClick (int button, int state, int x, int y){
 
     if(instrucao == 0 && creditos ==0){
       	if(x>= 505 && x<= 806 && y>=197 && y<=304){ //para jogar
-
+		parar_musica();
       		menu = 0;
       	}
         
@@ -319,6 +319,13 @@ void gerarFase4(){
 
 
 void inicializa(void){
+	if(menu==1){
+	tocar_musica("MusicaMenu.ogg", -1);
+	}
+	
+	
+
+
 	//habilita mesclagem de cores, para termos suporte a texturas semi-transparentes
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -326,7 +333,7 @@ void inicializa(void){
 	//carregando texturas
 	carregarTextura(&texturaYouWin, "youWin.png");
 	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
-	carregarTextura(&texturaFundoCreditos, "TexturaCreditos.png");
+	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
 	carregarTextura(&texturaFundoNivel, "TexturaNivel.png");
 	carregarTextura(&texturaChefao,"Chefao.png");
 	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
@@ -520,10 +527,7 @@ void detectaColisoes(){
                             coisasBoas[i].largura = 0.0;
                             coisasBoas[i].altura = 0.0;
                     }
-            }
-            if(pontuacao1==500){
-                tocar_musica("MusicaVitoria.ogg", 0);
-            }
+            }	
         }
 	        for(int i =0 ; i<numCoisasRuins ; i++){
 			if(Vidinhas>1){
@@ -748,13 +752,13 @@ void desenhaCena(void){
 	if(menu==1){
 		desenhaTextura(FundoPrincipal[0],texturaFundoMenu);
 		if(instrucao==1){
-		desenhaInstrucao();
+			desenhaInstrucao();
 		}
 		else if(creditos==1){
-        	desenhaCreditos();	
+        		desenhaCreditos();	
 		}
 		else if(nivel==1){
-		desenhaNivel();	
+        	 desenhaNivel();	
 		}
 		glutSwapBuffers();
 	
@@ -815,9 +819,11 @@ void desenhaCena(void){
 			    Fase4();
 		    }
 	    }
-	    if(pontuacao1>500){
-			if(momentoQuePassouPra5 == 0)
+	    if(pontuacao1>=500){
+			if(momentoQuePassouPra5 == 0){
 			    momentoQuePassouPra5 =glutGet(GLUT_ELAPSED_TIME);
+			    tocar_musica("MusicaVitoria.ogg", 0); //posso colocar a musica aqui,pois só passa por aqui mais de uma vez
+			    }
 		    if(momentoAtual - momentoQuePassouPra5 < 5000){
 			    Fase4();			
 			    desenhaTextura(youWin,texturaYouWin);
