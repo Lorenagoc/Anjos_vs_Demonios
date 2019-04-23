@@ -44,6 +44,7 @@ int aux4=0;
 int texturaFundoMenu=0;
 int texturaFundoInstrucao=0;
 int texturaFundoCreditos=0;
+int texturaFundoNivel=0;
 int texturaFundo=0;
 int texturaAnzol=0;
 int texturaChefao=0;
@@ -228,7 +229,7 @@ void MouseClick (int button, int state, int x, int y){
       	    creditos=1;
       	}
       	
-      	if(x>=440 && x<=881 && y>=443 && y<=555){//para os niveis
+      	if(x>=469 && x<=799 && y>=451 && y<=562){//para os niveis
       	    nivel=1;
       	}
     }
@@ -326,6 +327,7 @@ void inicializa(void){
 	carregarTextura(&texturaYouWin, "youWin.png");
 	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
 	carregarTextura(&texturaFundoCreditos, "TexturaCreditos.png");
+	carregarTextura(&texturaFundoNivel, "TexturaNivel.png");
 	carregarTextura(&texturaChefao,"Chefao.png");
 	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
@@ -427,6 +429,10 @@ void desenhaInstrucao(){
 
 void desenhaCreditos(){
     desenhaTextura(FundoPrincipal[0],texturaFundoCreditos);
+}
+
+void desenhaNivel(){
+    desenhaTextura(FundoPrincipal[0],texturaFundoNivel);
 }
 
 //para gerar cada fase de acordo com a pontuação
@@ -745,7 +751,10 @@ void desenhaCena(void){
 		desenhaInstrucao();
 		}
 		else if(creditos==1){
-        desenhaCreditos();	
+        	desenhaCreditos();	
+		}
+		else if(nivel==1){
+		desenhaNivel();	
 		}
 		glutSwapBuffers();
 	
