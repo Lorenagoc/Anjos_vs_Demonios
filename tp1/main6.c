@@ -16,6 +16,11 @@ typedef struct Objeto{
 	double largura,altura;
 } objeto;
 
+typedef struct{
+	int x,y;
+	
+}estrutura;
+	
 //variaveis globais
 
 int numCoisasBoas = 12; //máximo,porem altera-se com as fases
@@ -27,6 +32,8 @@ long int momentoQueDeuGameOver = 0;
 long int momentoQuePassouPra2 = 0;
 long int momentoQuePassouPra3 = 0;
 long int momentoQuePassouPra4 = 0;
+
+estrutura posicaoMouse;
 
 
 int aux2=0;
@@ -171,6 +178,45 @@ void escreveTexto(void * font, char *s, float x, float y, float z) {
 
 void solta(unsigned char key,int x,int y){
 	k[key]=0;
+}
+
+void desenhaAviso(){
+		glColor3f(0,0,0);
+		glBegin(GL_TRIANGLE_FAN);
+			glVertex2f(-aviso.largura,0);   //sentido anti horario
+			glVertex2f(-aviso.largura,aviso.altura);
+			glVertex2f(aviso.largura,aviso.altura);
+			glVertex2f(aviso.largura,0);
+		glEnd();
+}
+
+//funcao q funcao q coordena o click do mouse no menu
+
+void movimentoMouse(int x, int y) {
+    posicaoMouse.x = x;
+    printf("x %d\n", posicaoMouse.x);
+    posicaoMouse.y = y;
+    printf("y %d\n", posicaoMouse.y);
+}
+
+//funcao q aplica as acoes desejadas ao clicar com o mouse
+
+void MouseClick (int button, int state, int x, int y){
+
+  if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+
+  	if(x>= 505 && x<= 806 && y>=197 && y<=304){ //para jogar
+
+  		menu = 0;
+  	}
+
+  	if(x>=14 && x<=92 && y>=665 && y<=708){ //para sair 
+
+  		exit(0);
+  	}
+
+  } //se clicar em algum dos botões
+   
 }
 
 
@@ -360,15 +406,7 @@ void inicializaGerar(void){
 	}
 }
 
-void desenhaAviso(){
-		glColor3f(0,0,0);
-		glBegin(GL_TRIANGLE_FAN);
-			glVertex2f(-aviso.largura,0);   //sentido anti horario
-			glVertex2f(-aviso.largura,aviso.altura);
-			glVertex2f(aviso.largura,aviso.altura);
-			glVertex2f(aviso.largura,0);
-		glEnd();
-}
+
 
 void pressiona(unsigned char key,int x,int y){
 	k[key]=1;
@@ -770,10 +808,10 @@ void desenhaCena(void){
 		}	
 	}
 	ControleCoracoes();
-	glutSwapBuffers();}
+	glutSwapBuffers();
 
 }
-
+}
 
 //main
 
@@ -791,6 +829,11 @@ int main(int argc, char **argv){
     glutReshapeFunc(redimensiona);
     glutKeyboardFunc(pressiona);
     glutKeyboardUpFunc(solta);
+      // movimento SEM botão pressionado
+  glutPassiveMotionFunc(movimentoMouse);
+
+  // Click em um botão
+  glutMouseFunc(MouseClick);
     glutTimerFunc(0, atualiza, 0); //ao vivo,a cada framer atualiza
     inicializaGerar();
     inicializa();
