@@ -416,6 +416,7 @@ void pressiona(unsigned char key,int x,int y){
        		    Vidinhas =6;
        		    break;
             }
+	   break;
         case 'n':
         case 'N':
             if(esc==1){
@@ -426,6 +427,7 @@ void pressiona(unsigned char key,int x,int y){
                 reiniciar =0;
         	    break;
             }
+	 break;
         	           
         case 'p':
         case 'P':
