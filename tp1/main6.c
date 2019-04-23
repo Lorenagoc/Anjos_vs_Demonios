@@ -243,7 +243,7 @@ void gerarFase3(){
 void gerarFase4(){
 	geradorCoisasBoas(6);
 	geradorCoisasRuins(6);
-	//geradorChefao();
+	geradorChefao();
 }
 
 
@@ -449,26 +449,43 @@ int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,doub
 void detectaColisoes(){
         for(int i =0 ; i<numCoisasBoas ; i++){
                 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
-                        tocar_musica("MusicaBateCoisasBoas.ogg", 1);
+                        tocar_musica("MusicaBateCoisasBoas.ogg", 0);
                         pontuacao1+=10;
                         coisasBoas[i].largura = 0.0;
                         coisasBoas[i].altura = 0.0;
                 }
         }
 	        for(int i =0 ; i<numCoisasRuins ; i++){
-                if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){
-                        tocar_musica("MusicaBateCoisasRuins.ogg", 1);
-                        Vidinhas--;
-                        coisasRuins[i].largura = 0.0;
-                        coisasRuins[i].altura = 0.0;
-                }
-        }
-		 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,chefao.x,chefao.y,chefao.largura,chefao.altura))){
-                        tocar_musica("MusicaBateCoisasRuins.ogg", 1);
-                        Vidinhas--;
-			chefao.largura=0.0;
-			chefao.altura=0.0;
-                }
+			if(Vidinhas>1){
+				if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){                        
+					tocar_musica("MusicaBateCoisasRuins.ogg", 0);
+				        Vidinhas--;
+				        coisasRuins[i].largura = 0.0;
+				        coisasRuins[i].altura = 0.0;
+				}
+				if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,chefao.x,chefao.y,chefao.largura,chefao.altura))){
+				        tocar_musica("MusicaChefao.ogg", 0);
+				        Vidinhas--;
+					chefao.largura=0.0;
+					chefao.altura=0.0;
+				}
+			}
+			else if(Vidinhas==1){
+				 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasRuins[i].x,coisasRuins[i].y,coisasRuins[i].largura,coisasRuins[i].altura))){                        
+					tocar_musica("MusicaGameOver.ogg", 0);
+				        Vidinhas--;
+				        coisasRuins[i].largura = 0.0;
+				        coisasRuins[i].altura = 0.0;
+				}
+				 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,chefao.x,chefao.y,chefao.largura,chefao.altura))){
+				        tocar_musica("MusicaChefao.ogg", 0);
+				        Vidinhas--;
+					chefao.largura=0.0;
+					chefao.altura=0.0;
+                		}
+			}
+        	}
+
 }
 
 //--------------------------------------------fim algoritimo colisão-------------------------------------------------------
@@ -622,7 +639,6 @@ void Fase4(void){
 		gerarFase4();
 		aux4=1;	
 	}
-	velocidadeCenario=4;
 	desenhaTextura(FundoPrincipal[0],texturaFundo3);
 	desenhaTextura(FundoPrincipal[1],texturaFundo3);
 	desenhaTextura(anzol,texturaAnzol);
@@ -632,7 +648,7 @@ void Fase4(void){
 	for(int i=0; i<6; i++){
 		desenhaTextura(coisasRuins[i],texturaCoisasRuins);
 	}
-	//desenhaTextura(chefao,texturaCoisasRuins);
+	desenhaTextura(chefao,texturaCoisasRuins);
 	desenhaTextura(anjo,texturaAnjo);		
 }
 
@@ -651,7 +667,6 @@ void ControleCoracoes(void){
 	if(Vidinhas==1)
 	desenhaTextura(vidinhas,texturaVidinhas1);
 	if(Vidinhas<=0){
-		tocar_musica("somderrota.ogg", 1);
 		desenhaTextura(vidinhas,texturaVidinhas0);
 		desenhaTextura(gameover,texturaGameOver);
 		}
@@ -744,7 +759,6 @@ void desenhaCena(void){
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,AvisoReiniciar,-440,-60,0);
 	}
 	if(Vidinhas<=0){
-		tocar_musica("somderrota.ogg", 1);
 		if(momentoQueDeuGameOver == 0)
 			momentoQueDeuGameOver =glutGet(GLUT_ELAPSED_TIME);
 		if(momentoAtual - momentoQueDeuGameOver > 1200){
