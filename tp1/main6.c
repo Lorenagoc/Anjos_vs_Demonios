@@ -506,12 +506,17 @@ int colidiu(double posicaoAnzolX, double posicaoAnzolY ,double larguraAnzol,doub
 
 void detectaColisoes(){
         for(int i =0 ; i<numCoisasBoas ; i++){
-                if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
-                        tocar_musica("MusicaBateCoisasBoas.ogg", 0);
-                        pontuacao1+=10;
-                        coisasBoas[i].largura = 0.0;
-                        coisasBoas[i].altura = 0.0;
-                }
+            if(pontuacao<500){
+                    if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,coisasBoas[i].x,coisasBoas[i].y,coisasBoas[i].largura,coisasBoas[i].altura))){
+                            tocar_musica("MusicaBateCoisasBoas.ogg", 0);
+                            pontuacao1+=10;
+                            coisasBoas[i].largura = 0.0;
+                            coisasBoas[i].altura = 0.0;
+                    }
+            }
+            if(pontuacao==500){
+                tocar_musica("MusicaVitoria.ogg", 0);
+            }
         }
 	        for(int i =0 ; i<numCoisasRuins ; i++){
 			if(Vidinhas>1){
