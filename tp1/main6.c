@@ -7,6 +7,7 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
 
+
 //structs
 
 typedef struct Objeto{
@@ -18,7 +19,6 @@ typedef struct Objeto{
 
 typedef struct{
 	int x,y;
-	
 }estrutura;
 	
 //variaveis globais
@@ -32,6 +32,7 @@ long int momentoQueDeuGameOver = 0;
 long int momentoQuePassouPra2 = 0;
 long int momentoQuePassouPra3 = 0;
 long int momentoQuePassouPra4 = 0;
+long int momentoQuePassouPra5 = 0;
 
 estrutura posicaoMouse;
 
@@ -41,6 +42,8 @@ int aux3=0;
 int aux4=0;
 
 int texturaFundoMenu=0;
+int texturaFundoInstrucao=0;
+int texturaFundoCreditos=0;
 int texturaFundo=0;
 int texturaAnzol=0;
 int texturaChefao=0;
@@ -49,6 +52,7 @@ int texturaCoisasRuins =0;
 int texturaPaused =0;
 int texturaGameOver=0;
 int texturaNextLevel=0;
+int texturaYouWin=0;
 int texturaAnjo=0;
 int texturaFundo2=0;
 int texturaFundo3=0;
@@ -72,8 +76,6 @@ int pontuacao1 = 0; //salva a pontuaçãos
 
 char AvisoEsc[] = {"Se deseja sair mesmo do jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
 char AvisoReiniciar[] = {"Se deseja reiniciar mesmo o jogo,digite a tecla 's',caso deseje continuar,digite a tecla 'n'"};
-char Instrucoes[] = {"Para movimentação do anjinho: A- Esquerda D- Direita"};
-char Creditos[] = {"Doces garotas dedicadas: Lorena Gomes&Ana Carolina - 2019.1"};
 
 objeto anzol;
 objeto coisasRuins[12];
@@ -82,6 +84,7 @@ objeto FundoPrincipal[2];
 objeto paused;
 objeto gameover;
 objeto nextlevel;
+objeto youWin;
 objeto anjo;
 objeto vidinhas;
 objeto aviso;
@@ -93,6 +96,7 @@ int reiniciar =0;
 int menu =1;
 int instrucao=0;
 int creditos=0;
+int nivel=0;
 
 //------------------------------------------------- fim das variáveis globais --------------------------------------
 
@@ -190,14 +194,14 @@ void desenhaAviso(){
 		glEnd();
 }
 
+
 //funcao q funcao q coordena o click do mouse no menu
 
 void movimentoMouse(int x, int y) {
     posicaoMouse.x = x;
-    printf("x %d\n", posicaoMouse.x);
     posicaoMouse.y = y;
-    printf("y %d\n", posicaoMouse.y);
 }
+
 
 //funcao q aplica as acoes desejadas ao clicar com o mouse
 
@@ -205,16 +209,33 @@ void MouseClick (int button, int state, int x, int y){
 
   if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 
-  	if(x>= 505 && x<= 806 && y>=197 && y<=304){ //para jogar
+    if(instrucao == 0 && creditos ==0){
+      	if(x>= 505 && x<= 806 && y>=197 && y<=304){ //para jogar
 
-  		menu = 0;
-  	}
-
-  	if(x>=14 && x<=92 && y>=665 && y<=708){ //para sair 
-
-  		exit(0);
-  	}
-
+      		menu = 0;
+      	}
+        
+      	if(x>=14 && x<=92 && y>=665 && y<=708){ //para sair 
+      		exit(0);
+      	}
+  	
+      	if(x>=353 && x<=969 && y>=347 && y<=438){ //para instruções
+      	    instrucao=1;
+      	}
+      	
+      	if(x>=419 && x<=887 && y>=571 && y<=690){//para os creditos
+      	    creditos=1;
+      	}
+      	
+      	if(x>=440 && x<=881 && y>=443 && y<=555){//para os niveis
+      	    nivel=1;
+      	}
+    }
+    
+    //if instrucao =1
+    //if creditos=1;
+    //if nivel=1;
+    
   } //se clicar em algum dos botões
    
 }
@@ -269,7 +290,7 @@ void geradorChefao(){
 	chefao.largura=120;
 	chefao.altura=120;
 	chefao.velocidadeX=0.8;
-	chefao.velocidadeY=3;
+	chefao.velocidadeY=velocidadeCenario;
 }
 
 void gerarFase1(){
@@ -289,7 +310,7 @@ void gerarFase3(){
 
 void gerarFase4(){
 	geradorCoisasBoas(6);
-	geradorCoisasRuins(6);
+	geradorCoisasRuins(12);
 	geradorChefao();
 }
 
@@ -301,6 +322,9 @@ void inicializa(void){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//carregando texturas
+	carregarTextura(&texturaYouWin, "youWin.png");
+	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
+	carregarTextura(&texturaFundoCreditos, "TexturaCreditos.png");
 	carregarTextura(&texturaChefao,"Chefao.png");
 	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
@@ -343,8 +367,6 @@ void inicializa(void){
 	FundoPrincipal[1].largura = larguraJanela;
 	FundoPrincipal[1].altura = -alturaJanela;
 
-	velocidadeCenario=3;
-
 	//tela pause
 	
 	paused.x= -156.0;
@@ -365,6 +387,12 @@ void inicializa(void){
 	nextlevel.y=45.5;
 	nextlevel.largura=979.0;
 	nextlevel.altura=-91.0;	
+	
+	//youWin
+	youWin.x=-362.0;
+	youWin.y=91.0;
+	youWin.largura=724.0;
+	youWin.altura=-91.0;
 
 	// anjo segurando o anzol
 
@@ -391,6 +419,16 @@ void inicializa(void){
 
 }
 
+//funcionalidades do menu,como instrucao e creditos
+void desenhaInstrucao(){
+    desenhaTextura(FundoPrincipal[0],texturaFundoInstrucao);
+}
+
+void desenhaCreditos(){
+    desenhaTextura(FundoPrincipal[0],texturaFundoCreditos);
+}
+
+//para gerar cada fase de acordo com a pontuação
 void inicializaGerar(void){	
 	if(pontuacao1<=100){
 		gerarFase1();	
@@ -410,29 +448,7 @@ void inicializaGerar(void){
 
 void pressiona(unsigned char key,int x,int y){
 	k[key]=1;
-	    switch(key){
-	if(menu==1){
-	case 'j':
-	case 'J':
-		menu=0;
-		break;
-	case 'i':
-	case 'I':
-            if(instrucao == 0) {
-              instrucao = 1;
-            } else {
-              instrucao = 0;
-            }
-	    break;
-	case 'c':
-	case 'C':
-	   if(creditos == 0) {
-              creditos = 1;
-            } else {
-              creditos = 0;
-            }
-	    break;
-	}        
+	    switch(key){     
 	case 27:
         	esc= 1;
         	break;
@@ -520,7 +536,7 @@ void detectaColisoes(){
 				        coisasRuins[i].altura = 0.0;
 				}
 				 if((colidiu(anzol.x,anzol.y,anzol.largura,anzol.altura,chefao.x,chefao.y,chefao.largura,chefao.altura))){
-				        tocar_musica("MusicaChefao.ogg", 0);
+				        tocar_musica("MusicaGameOver.ogg", 0);
 				        Vidinhas--;
 					chefao.largura=0.0;
 					chefao.altura=0.0;
@@ -581,7 +597,7 @@ void andarCenario()
 		FundoPrincipal[0].y = 360.0;
 		FundoPrincipal[1].y = -360.0;
 	}
-	if(FundoPrincipal[0].y + FundoPrincipal[0].altura >= 357){
+	if(FundoPrincipal[0].y + FundoPrincipal[0].altura >= alturaJanela/2 - velocidadeCenario){
 		if(pontuacao1<=100){
 			gerarFase1();
 		}
@@ -687,7 +703,7 @@ void Fase4(void){
 	for(int i=0; i<6; i++){
 		desenhaTextura(coisasBoas[i],texturaCoisasBoas);
 	}
-	for(int i=0; i<6; i++){
+	for(int i=0; i<12; i++){
 		desenhaTextura(coisasRuins[i],texturaCoisasRuins);
 	}
 	desenhaTextura(chefao,texturaChefao);
@@ -720,12 +736,10 @@ void desenhaCena(void){
 	if(menu==1){
 		desenhaTextura(FundoPrincipal[0],texturaFundoMenu);
 		if(instrucao==1){
-		desenhaAviso();
-		escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Instrucoes,-440,-60,0);	
+		desenhaInstrucao();
 		}
 		else if(creditos==1){
-		desenhaAviso();
-		escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Creditos,-440,-60,0);	
+        desenhaCreditos();	
 		}
 		glutSwapBuffers();
 	
@@ -771,21 +785,34 @@ void desenhaCena(void){
 	}
 		if(pontuacao1>350){
 			if(momentoQuePassouPra4 == 0)
-			momentoQuePassouPra4 =glutGet(GLUT_ELAPSED_TIME);
-		if(momentoAtual - momentoQuePassouPra4 < 2000){
-			if(momentoAtual - momentoQuePassouPra4 < 1000){
-			Fase3();			
-			desenhaTextura(nextlevel,texturaNextLevel);
-			}
-			if(momentoAtual - momentoQuePassouPra4 > 1000 && momentoAtual - momentoQuePassouPra4 < 2000){
-			Fase4();			
-			desenhaTextura(nextlevel,texturaNextLevel);
-			}
-		}				
-		else if(momentoAtual - momentoQuePassouPra4 > 2000){
-			Fase4();
-		}
-	}
+			    momentoQuePassouPra4 =glutGet(GLUT_ELAPSED_TIME);
+		    if(momentoAtual - momentoQuePassouPra4 < 2000){
+			    if(momentoAtual - momentoQuePassouPra4 < 1000){
+			    Fase3();			
+			    desenhaTextura(nextlevel,texturaNextLevel);
+			    }
+			    if(momentoAtual - momentoQuePassouPra4 > 1000 && momentoAtual - momentoQuePassouPra4 < 2000){
+			    Fase4();			
+			    desenhaTextura(nextlevel,texturaNextLevel);
+			    }
+		    }				
+		    else if(momentoAtual - momentoQuePassouPra4 > 2000){
+			    Fase4();
+		    }
+	    }
+	    if(pontuacao1>500){
+			if(momentoQuePassouPra5 == 0)
+			    momentoQuePassouPra5 =glutGet(GLUT_ELAPSED_TIME);
+		    if(momentoAtual - momentoQuePassouPra5 < 1200){
+			    if(momentoAtual - momentoQuePassouPra5 < 1200){
+			    Fase4();			
+			    desenhaTextura(youWin,texturaYouWin);		
+			    }
+		    }				
+		    else if(momentoAtual - momentoQuePassouPra5 > 2000){
+			    exit(0);
+		    }
+	    }
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,Pontuacao,500,300,0);
 	char y[8]; sprintf(y, "%i", pontuacao1); //transformar inteiro em string
 	escreveTexto(GLUT_BITMAP_TIMES_ROMAN_24,y,570,300,0);
@@ -830,7 +857,7 @@ int main(int argc, char **argv){
     glutKeyboardFunc(pressiona);
     glutKeyboardUpFunc(solta);
       // movimento SEM botão pressionado
-  glutPassiveMotionFunc(movimentoMouse);
+  //glutPassiveMotionFunc(movimentoMouse);
 
   // Click em um botão
   glutMouseFunc(MouseClick);
