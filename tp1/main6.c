@@ -217,7 +217,7 @@ void MouseClick (int button, int state, int x, int y){
       		menu = 0;
       	}
         
-      	if(x>=14 && x<=92 && y>=665 && y<=708){ //para sair 
+      	if(x>=23 && x<=120 && y>=647 && y<=697){ //para sair 
       		exit(0);
       	}
   	
