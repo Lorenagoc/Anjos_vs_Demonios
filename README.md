@@ -18,7 +18,7 @@ Com isso o programa será compilado e executado, nessa sequência.
   
   º Os efeitos sonoros do jogo foram retirados em sua maioria do site https://www.youtube.com e em seguida convertidos para formato de áudio e cortados.
   
-  º As bases das artes contidas no jogo foram tiradas do site http://pixelartmaker.com porém editadas e personalizadas pelas prórpias autoras do trabalho.
+  º As bases das artes contidas no jogo foram tiradas do site http://pixelartmaker.com porém editadas e personalizadas pelas próprias autoras desse trabalho.
   
 * O link para o vídeo do game será inserido em brave. 
 
