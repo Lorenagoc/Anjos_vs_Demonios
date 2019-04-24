@@ -265,6 +265,7 @@ void MouseClick (int button, int state, int x, int y){
 		for(int i = 0; i<numCoisasRuins ; i++ ){
 			coisasRuins[i].velocidadeY = velocidadeCenarioFacil;
 		}
+		chefao.velocidadeY=velocidadeCenarioFacil;
       	}
 	if(x>=558 && x<=726 && y>=449 && y<=503){ //para ser medio
       		velocidadeCenario=velocidadeCenarioMedio;
@@ -276,7 +277,7 @@ void MouseClick (int button, int state, int x, int y){
 		for(int i = 0; i<numCoisasRuins ; i++ ){
 			coisasRuins[i].velocidadeY = velocidadeCenarioMedio;
 		}
-
+		chefao.velocidadeY=velocidadeCenarioMedio;
       	}
 	if(x>=554 && x<=712 && y>=561 && y<=607){ //para ser dificil
       		velocidadeCenario=velocidadeCenarioDificil;
@@ -288,6 +289,7 @@ void MouseClick (int button, int state, int x, int y){
 		for(int i = 0; i<numCoisasRuins ; i++ ){
 			coisasRuins[i].velocidadeY = velocidadeCenarioDificil;
 		}
+		chefao.velocidadeY=velocidadeCenarioDificil;
       	}	
     }
 
@@ -345,7 +347,6 @@ void geradorChefao(){
 	chefao.largura=120;
 	chefao.altura=120;
 	chefao.velocidadeX=0.8;
-	chefao.velocidadeY=velocidadeCenario;
 }
 
 void gerarFase1(){
