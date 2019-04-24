@@ -30,4 +30,6 @@ Screenshots:
 
 ![fase2Screen](https://user-images.githubusercontent.com/42523044/56629345-712a5900-6623-11e9-9c3c-78c9d3f27395.png)
 
+![fase3Screen](https://user-images.githubusercontent.com/42523044/56629388-8ef7be00-6623-11e9-8afd-0444d334062e.png)
+
 
