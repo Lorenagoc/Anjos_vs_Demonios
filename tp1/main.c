@@ -66,7 +66,12 @@ int texturaVidinhas1=0;
 int texturaVidinhas0=0;
 
 
-int velocidadeCenario=3;
+int velocidadeCenario;
+int velocidadeCenarioFacil=3;
+int velocidadeCenarioMedio=7;
+int velocidadeCenarioDificil=12;
+int auxVelocidade;
+
 int Vidinhas =6;
 
 int larguraJanela, alturaJanela;
@@ -211,7 +216,7 @@ void MouseClick (int button, int state, int x, int y){
 
   if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 
-    if(instrucao == 0 && creditos ==0){
+    if(instrucao == 0 && creditos ==0 && nivel==0){
       	if(x>= 505 && x<= 806 && y>=197 && y<=304){ //para jogar
 		parar_musica();
       		menu = 0;
@@ -234,14 +239,62 @@ void MouseClick (int button, int state, int x, int y){
       	}
     }
     
-    //if instrucao =1
-    //if creditos=1;
-    //if nivel=1;
+    if(instrucao==1){
+	if(x>=162 && x<=376 && y>=635 && y<=664){ //para voltar para o menu
+      		instrucao=0;
+      	}
+    }
+
+    if(creditos==1){
+	if(x>=162 && x<=376 && y>=635 && y<=664){ //para voltar para o menu
+      		creditos=0;
+      	}
+    }
+	
+    if(nivel==1){
+	if(x>=162 && x<=376 && y>=635 && y<=664){ //para voltar para o menu
+      		nivel=0;
+      	}
+	if(x>=572 && x<=700 && y>=344 && y<=391){ //para ser facil
+      		velocidadeCenario=velocidadeCenarioFacil;
+		menu=0;
+		auxVelocidade=1;
+		for(int i = 0; i<numCoisasBoas ; i++){
+			coisasBoas[i].velocidadeY = velocidadeCenarioFacil;
+		}
+		for(int i = 0; i<numCoisasRuins ; i++ ){
+			coisasRuins[i].velocidadeY = velocidadeCenarioFacil;
+		}
+      	}
+	if(x>=558 && x<=726 && y>=449 && y<=503){ //para ser medio
+      		velocidadeCenario=velocidadeCenarioMedio;
+		menu=0;
+		auxVelocidade=2;
+		for(int i = 0; i<numCoisasBoas ; i++){
+			coisasBoas[i].velocidadeY = velocidadeCenarioMedio;
+		}
+		for(int i = 0; i<numCoisasRuins ; i++ ){
+			coisasRuins[i].velocidadeY = velocidadeCenarioMedio;
+		}
+
+      	}
+	if(x>=554 && x<=712 && y>=561 && y<=607){ //para ser dificil
+      		velocidadeCenario=velocidadeCenarioDificil;
+		menu=0;
+		auxVelocidade=3;
+		for(int i = 0; i<numCoisasBoas ; i++){
+			coisasBoas[i].velocidadeY = velocidadeCenarioDificil;
+		}
+		for(int i = 0; i<numCoisasRuins ; i++ ){
+			coisasRuins[i].velocidadeY = velocidadeCenarioDificil;
+		}
+      	}	
+    }
+
     
   } //se clicar em algum dos botões
    
 }
-
 
 void geradorCoisasBoas(int numCoisasBoas){
 	int x=1;
@@ -261,7 +314,7 @@ void geradorCoisasBoas(int numCoisasBoas){
 	        coisasBoas[i].y= ((geradorY));
 	        coisasBoas[i].x = ((geradorX)*x);
 	        coisasBoas[i].velocidadeX = 0.0;
-	        coisasBoas[i].velocidadeY = velocidadeCenario;
+		coisasBoas[i].velocidadeY=velocidadeCenario;
 	 }
 }
 void geradorCoisasRuins(int numCoisasRuins){
@@ -282,7 +335,7 @@ void geradorCoisasRuins(int numCoisasRuins){
 	        coisasRuins[i].y= ((geradorY));
 	        coisasRuins[i].x = ((geradorX)*x);
 	        coisasRuins[i].velocidadeX = 0.0;
-	        coisasRuins[i].velocidadeY = velocidadeCenario;
+		coisasRuins[i].velocidadeY=velocidadeCenario;
 	 }
 }
 
@@ -323,8 +376,6 @@ void inicializa(void){
 	tocar_musica("MusicaMenu.ogg", -1);
 	}
 	
-	
-
 
 	//habilita mesclagem de cores, para termos suporte a texturas semi-transparentes
 	glEnable(GL_BLEND);
@@ -333,8 +384,8 @@ void inicializa(void){
 	//carregando texturas
 	carregarTextura(&texturaYouWin, "youWin.png");
 	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
-	carregarTextura(&texturaFundoInstrucao, "TexturaInstrucao.png");
-	carregarTextura(&texturaFundoNivel, "TexturaNivel.png");
+	carregarTextura(&texturaFundoCreditos, "TexturaCreditos.png");
+	carregarTextura(&texturaFundoNivel, "TexturaNiveis.png");
 	carregarTextura(&texturaChefao,"Chefao.png");
 	carregarTextura(&texturaFundoMenu,"TexturaMenu.png");
 	carregarTextura(&texturaFundo,"BackgroundSky.png");
@@ -356,7 +407,6 @@ void inicializa(void){
 	carregarTextura(&texturaVidinhas0, "1.png");
 
 
-
 	// anzol
 	anzol.largura = 8;
 	anzol.altura=10;
@@ -376,6 +426,7 @@ void inicializa(void){
 	FundoPrincipal[1].y = -alturaJanela/2;
 	FundoPrincipal[1].largura = larguraJanela;
 	FundoPrincipal[1].altura = -alturaJanela;
+	FundoPrincipal[0].velocidadeY = velocidadeCenario;
 
 	//tela pause
 	
@@ -758,7 +809,7 @@ void desenhaCena(void){
         		desenhaCreditos();	
 		}
 		else if(nivel==1){
-        	 desenhaNivel();	
+        	 	desenhaNivel();	
 		}
 		glutSwapBuffers();
 	
@@ -870,17 +921,14 @@ int main(int argc, char **argv){
     alturaJanela = 720;
     glutInitWindowSize(larguraJanela,alturaJanela);
     glutInitWindowPosition(50, 50);
-
     glutCreateWindow("ANJOS X DEMONIOS");
+    // Click em um botão
+    glutMouseFunc(MouseClick);
     glutDisplayFunc(desenhaCena);
     glutReshapeFunc(redimensiona);
     glutKeyboardFunc(pressiona);
     glutKeyboardUpFunc(solta);
-      // movimento SEM botão pressionado
-  //glutPassiveMotionFunc(movimentoMouse);
 
-  // Click em um botão
-  glutMouseFunc(MouseClick);
     glutTimerFunc(0, atualiza, 0); //ao vivo,a cada framer atualiza
     inicializaGerar();
     inicializa();
