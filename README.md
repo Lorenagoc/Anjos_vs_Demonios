@@ -15,8 +15,6 @@ Com isso o programa será compilado e executado, nessa sequência.
 * Componentes de execução: 
 
   º Há um makefile na pasta do jogo para instalar as bibliotecas 
-
-  º Os efeitos sonoros do jogo foram retirados em sua maioria do site https://www.youtube.com e em seguida convertidos para formato de áudio e cortados
-  
+  º Os efeitos sonoros do jogo foram retirados em sua maioria do site https://www.youtube.com e em seguida convertidos para formato de áudio e cortados 
   º As bases das artes contidas no jogo foram tiradas do site http://pixelartmaker.com porém editadas e personalizadas pelas prórpias autoras do trabalho
 
