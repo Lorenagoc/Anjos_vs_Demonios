@@ -12,7 +12,7 @@ make run
 ```
 Com isso o programa será compilado e executado, nessa sequência. 
 
-Componentes de execução: 
-* makefile na pasta do jogo para instalar as bibliotecas
-* os áudios contidos no jogo foram 
+* Componentes de execução: 
+- makefile na pasta do jogo para instalar as bibliotecas
+- os áudios contidos no jogo foram 
 
