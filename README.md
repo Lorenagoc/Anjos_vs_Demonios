@@ -26,3 +26,6 @@ Screenshots:
 
 ![MenuScreen](https://user-images.githubusercontent.com/42523044/56629214-05e08700-6623-11e9-9e13-973bbd1dc689.png)
 
+![fase1Screen](https://user-images.githubusercontent.com/42523044/56629285-404a2400-6623-11e9-90f0-feb4dfba4285.png)
+
+
