@@ -28,4 +28,6 @@ Screenshots:
 
 ![fase1Screen](https://user-images.githubusercontent.com/42523044/56629285-404a2400-6623-11e9-90f0-feb4dfba4285.png)
 
+![fase2Screen](https://user-images.githubusercontent.com/42523044/56629345-712a5900-6623-11e9-9c3c-78c9d3f27395.png)
+
 
